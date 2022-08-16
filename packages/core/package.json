@@ -25,5 +25,8 @@
   },
   "bugs": {
     "url": "https://github.com/v833/tut-cli-dev/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
