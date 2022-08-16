@@ -6,6 +6,9 @@
   "homepage": "https://github.com/v833/tut-cli-dev#readme",
   "license": "ISC",
   "main": "lib/core.js",
+  "bin": {
+    "tut": "bin/index.js"
+  },
   "directories": {
     "lib": "lib",
     "test": "__tests__"
