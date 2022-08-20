@@ -1,14 +1,11 @@
 {
-  "name": "@tut-cli-dev/core",
+  "name": "@tut-cli-dev/log",
   "version": "1.0.3",
-  "description": "tut-cli-dev core",
+  "description": "tut-cli-dev log",
   "author": "v833 <2507301541@qq.com>",
   "homepage": "https://github.com/v833/tut-cli-dev#readme",
   "license": "ISC",
-  "main": "lib/core.js",
-  "bin": {
-    "tut": "bin/index.js"
-  },
+  "main": "lib/index.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -16,17 +13,20 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/v833/tut-cli-dev.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\""
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/v833/tut-cli-dev/issues"
   },
-  "publishConfig": {
-    "access": "public"
+  "dependencies": {
+    "npmlog": "^6.0.2"
   }
 }
