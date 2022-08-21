@@ -1,21 +1,35 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tut-cli-dev/get-npm-info': file:../../utils/get-npm-info
+  '@tut-cli-dev/init': file:../../command/init
   '@tut-cli-dev/log': file:../../utils/log
   '@tut-cli-dev/utils': file:../../utils/utils
   colors: ^1.4.0
+  commander: ^8.0.0
+  dotenv: ^16.0.1
   import-local: ^3.1.0
+  minimist: ^1.2.5
+  path-exists: ^4.0.0
   root-check: ^1.0.0
   semver: ^7.3.7
+  user-home: ^2.0.0
   yargs: ^17.5.1
 
 dependencies:
+  '@tut-cli-dev/get-npm-info': link:../../utils/get-npm-info
+  '@tut-cli-dev/init': link:../../command/init
   '@tut-cli-dev/log': link:../../utils/log
   '@tut-cli-dev/utils': link:../../utils/utils
   colors: 1.4.0
+  commander: 8.3.0
+  dotenv: 16.0.1
   import-local: 3.1.0
+  minimist: 1.2.6
+  path-exists: 4.0.0
   root-check: 1.0.0
   semver: 7.3.7
+  user-home: 2.0.0
   yargs: 17.5.1
 
 packages:
@@ -77,9 +91,19 @@ packages:
     engines: {node: '>=0.1.90'}
     dev: false
 
+  /commander/8.3.0:
+    resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
+    engines: {node: '>= 12'}
+    dev: false
+
   /default-uid/1.0.0:
     resolution: {integrity: sha512-KqOPKqX9VLrCfdKK/zMll+xb9kZOP4QyguB6jyN4pKaPoedk1bMFIfyTCFhVdrHb3GU7aJvKjd8myKxFRRDwCg==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /dotenv/16.0.1:
+    resolution: {integrity: sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==}
+    engines: {node: '>=12'}
     dev: false
 
   /downgrade-root/1.2.2:
@@ -160,6 +184,15 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+    dev: false
+
+  /minimist/1.2.6:
+    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
+    dev: false
+
+  /os-homedir/1.0.2:
+    resolution: {integrity: sha512-B5JU3cabzk8c67mRRd3ECmROafjYMXbuzlwtqdM8IbS8ktlTix8aFGb2bAGKrSRIlnfKwovGUUr72JUPyOb6kQ==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /p-limit/2.3.0:
@@ -261,6 +294,13 @@ packages:
   /supports-color/2.0.0:
     resolution: {integrity: sha512-KKNVtd6pCYgPIKU4cp2733HWYCpplQhddZLBUryaAHou723x+FRzQ5Df824Fj+IyyuiQTRoub4SnIFfIcrp70g==}
     engines: {node: '>=0.8.0'}
+    dev: false
+
+  /user-home/2.0.0:
+    resolution: {integrity: sha512-KMWqdlOcjCYdtIJpicDSFBQ8nFwS2i9sslAd6f4+CBGcU4gist2REnr2fxj2YocvJFxSF3ZOHLYLVZnUxv4BZQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      os-homedir: 1.0.2
     dev: false
 
   /wrap-ansi/7.0.0:
