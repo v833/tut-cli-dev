@@ -1,0 +1,3 @@
+ls -al|grep index
+
+echo $1 $2

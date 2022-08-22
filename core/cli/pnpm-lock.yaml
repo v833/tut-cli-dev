@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tut-cli-dev/exec': file:../exec
   '@tut-cli-dev/get-npm-info': file:../../utils/get-npm-info
   '@tut-cli-dev/init': file:../../command/init
   '@tut-cli-dev/log': file:../../utils/log
@@ -9,7 +10,6 @@ specifiers:
   commander: ^8.0.0
   dotenv: ^16.0.1
   import-local: ^3.1.0
-  minimist: ^1.2.5
   path-exists: ^4.0.0
   root-check: ^1.0.0
   semver: ^7.3.7
@@ -17,6 +17,7 @@ specifiers:
   yargs: ^17.5.1
 
 dependencies:
+  '@tut-cli-dev/exec': link:../exec
   '@tut-cli-dev/get-npm-info': link:../../utils/get-npm-info
   '@tut-cli-dev/init': link:../../command/init
   '@tut-cli-dev/log': link:../../utils/log
@@ -25,7 +26,6 @@ dependencies:
   commander: 8.3.0
   dotenv: 16.0.1
   import-local: 3.1.0
-  minimist: 1.2.6
   path-exists: 4.0.0
   root-check: 1.0.0
   semver: 7.3.7
@@ -184,10 +184,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
-    dev: false
-
-  /minimist/1.2.6:
-    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
     dev: false
 
   /os-homedir/1.0.2:

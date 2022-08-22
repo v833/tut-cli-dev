@@ -13,26 +13,23 @@ const pathExists = require('path-exists').sync
 const pkg = require('../package.json')
 const log = require('@tut-cli-dev/log')
 const init = require('@tut-cli-dev/init')
+const exec = require('@tut-cli-dev/exec')
 const { getNpmSemverVersion } = require('@tut-cli-dev/get-npm-info')
 const path = require('path')
 const { LOWEST_NODE_VERSION, DEFAULT_CLI_HOME } = require('./const')
 
-let args
 const program = new commander.Command()
 
 async function core() {
   try {
-    checkPackageVersion()
-    checkNodeVersion()
-    checkRoot()
-    checkUserHome()
-    // checkInputArgs()
-    checkEnv()
-    await checkGlobalUpdate()
+    await prepare()
     registerCommand()
   } catch (e) {
     // NOTICE
     log.error(e.message)
+    if (process.env.LOG_LEVEL === 'verbose') {
+      console.log(e)
+    }
   }
 }
 
@@ -42,13 +39,15 @@ function registerCommand() {
     .usage('<command> [options]')
     .version(pkg.version)
     .option('-d, --debug', '是否开启调试模式', false)
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件', '')
 
   program
     .command('init [projectNmae]')
     .option('-f, --force', '是否强制初始化项目')
-    .action(init)
+    .action(exec) // 动态init
 
   // 开启debug模式
+  // program.on 会在执行业务逻辑之前执行
   program.on('option:debug', function () {
     if (program.opts().debug) {
       process.env.LOG_LEVEL = 'verbose'
@@ -57,6 +56,11 @@ function registerCommand() {
     }
     log.level = process.env.LOG_LEVEL
     log.verbose('verbose_test')
+  })
+
+  // 指定全局targetPath
+  program.on('option:targetPath', function (targetPath) {
+    process.env.CLI_TARGET_PATH = targetPath
   })
 
   // 监听未知命令
@@ -74,6 +78,16 @@ function registerCommand() {
     program.outputHelp()
     console.log()
   }
+}
+
+async function prepare() {
+  checkPackageVersion()
+  checkNodeVersion()
+  checkRoot()
+  checkUserHome()
+  // checkInputArgs()
+  checkEnv()
+  await checkGlobalUpdate()
 }
 
 function checkPackageVersion() {
@@ -122,7 +136,6 @@ function checkEnv() {
     dotenv.config({ path: dotenvPath })
   }
   createDefaultConfig()
-  log.verbose('缓存路径', process.env.CLI_HOME_PATH)
 }
 function createDefaultConfig() {
   const cliConfig = { home: userHome }
@@ -133,7 +146,6 @@ function createDefaultConfig() {
   }
   // BETTER 对环境变量的值处理后生成新的环境变量
   process.env.CLI_HOME_PATH = cliConfig.cliHome
-  // return cliConfig
 }
 async function checkGlobalUpdate() {
   // 1. 获取当前版本号和模块名
