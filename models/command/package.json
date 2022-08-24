@@ -1,5 +1,5 @@
 {
-  "name": "@tut-cli-dev/init",
+  "name": "@tut-cli-dev/command",
   "version": "1.0.3",
   "description": "> TODO: description",
   "author": "v833 <2507301541@qq.com>",
@@ -26,8 +26,10 @@
   "bugs": {
     "url": "https://github.com/v833/tut-cli-dev/issues"
   },
-  "devDependencies": {
-    "@tut-cli-dev/command": "file:../../models/command",
-    "@tut-cli-dev/log": "file:../../utils/log"
+  "dependencies": {
+    "colors": "^1.4.0",
+    "semver": "^7.0.0",
+    "@tut-cli-dev/log": "file:../../utils/log",
+    "@tut-cli-dev/utils": "file:../../utils/utils"
   }
 }

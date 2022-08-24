@@ -16,7 +16,7 @@ const init = require('@tut-cli-dev/init')
 const exec = require('@tut-cli-dev/exec')
 const { getNpmSemverVersion } = require('@tut-cli-dev/get-npm-info')
 const path = require('path')
-const { LOWEST_NODE_VERSION, DEFAULT_CLI_HOME } = require('./const')
+const { DEFAULT_CLI_HOME } = require('./const')
 
 const program = new commander.Command()
 
@@ -82,7 +82,7 @@ function registerCommand() {
 
 async function prepare() {
   checkPackageVersion()
-  checkNodeVersion()
+  // checkNodeVersion()
   checkRoot()
   checkUserHome()
   // checkInputArgs()
@@ -93,14 +93,14 @@ async function prepare() {
 function checkPackageVersion() {
   log.notice('cli', pkg.version)
 }
-function checkNodeVersion() {
-  const currentVersion = process.version
-  if (!semver.gte(currentVersion, LOWEST_NODE_VERSION)) {
-    throw new Error(
-      colors.red(`tut-cli 需要安装${LOWEST_NODE_VERSION}以上的node版本`)
-    )
-  }
-}
+// function checkNodeVersion() {
+//   const currentVersion = process.version
+//   if (!semver.gte(currentVersion, LOWEST_NODE_VERSION)) {
+//     throw new Error(
+//       colors.red(`tut-cli 需要安装${LOWEST_NODE_VERSION}以上的node版本`)
+//     )
+//   }
+// }
 function checkRoot() {
   const rootCheck = require('root-check')
   // core: invode process.setuid()

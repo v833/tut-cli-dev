@@ -57,7 +57,11 @@ async function exec() {
   const rootFile = pkg.getRootFilePath()
   if (rootFile) {
     // BETTER 在当前进程中调用
-    require(rootFile).apply(null, arguments)
+    try {
+      require(rootFile).call(null, Array.from(arguments))
+    } catch (e) {
+      log.error(e.message)
+    }
     // 在node子进程中进行
   }
 }

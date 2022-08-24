@@ -1,0 +1,9 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tut-cli-dev/command': file:../../models/command
+  '@tut-cli-dev/log': file:../../utils/log
+
+devDependencies:
+  '@tut-cli-dev/command': link:../../models/command
+  '@tut-cli-dev/log': link:../../utils/log
