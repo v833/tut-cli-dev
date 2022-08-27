@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tut-cli-dev/command': file:../../models/command
   '@tut-cli-dev/log': file:../../utils/log
+  '@tut-cli-dev/request': file:../../utils/request
   fs-extra: ^7.0.0
   inquirer: ^7.0.0
   semver: ^7.0.0
@@ -15,6 +16,7 @@ dependencies:
 devDependencies:
   '@tut-cli-dev/command': link:../../models/command
   '@tut-cli-dev/log': link:../../utils/log
+  '@tut-cli-dev/request': link:../../utils/request
 
 packages:
 

@@ -25,5 +25,8 @@
   },
   "bugs": {
     "url": "https://github.com/v833/tut-cli-dev/issues"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }

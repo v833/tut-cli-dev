@@ -5,6 +5,7 @@ const Command = require('@tut-cli-dev/command')
 const log = require('@tut-cli-dev/log')
 const fs = require('fs')
 const fse = require('fs-extra')
+const getProjectTemplate = require('./getProjectTemplate')
 
 const TYPE_PROJECT = 'project'
 const TYPE_COMPONENT = 'component'
@@ -25,6 +26,7 @@ class InitCommand extends Command {
       const projectInfo = await this.prepare()
       if (projectInfo) {
         log.verbose('projectInfo', projectInfo)
+        this.projectInfo = projectInfo
         // 2. 下载模板
         this.downloadTemplate()
         // 3. 安装模板
@@ -41,6 +43,12 @@ class InitCommand extends Command {
     // 1.4 通过egg.js获取mongodb中的数据并返回
   }
   async prepare() {
+    // 0. 判断项目模板是否存在
+    const template = await getProjectTemplate()
+    if (!template || template.length === 0) {
+      throw new Error('项目模板不存在')
+    }
+    this.template = template
     const localPath = process.cwd() // path.resolve('.'), 不能使用__dirname
 
     // 1. 判断当前目录时否为空
@@ -137,6 +145,12 @@ class InitCommand extends Command {
               return v
             }
           }
+        },
+        {
+          type: 'list',
+          name: 'projectTemplate',
+          message: '请选择项目模板',
+          choices: this.createTemplateChoices()
         }
       ])
       projectInfo = {
@@ -154,6 +168,12 @@ class InitCommand extends Command {
       return !file.startsWith('.') && !['node_modules'].includes(file)
     })
     return !fileList?.length
+  }
+  createTemplateChoices() {
+    return this.template.map((item) => ({
+      name: item.name,
+      value: item.npmName
+    }))
   }
 }
 

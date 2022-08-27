@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@tut-cli-dev/command": "file:../../models/command",
+    "@tut-cli-dev/request": "file:../../utils/request",
     "@tut-cli-dev/log": "file:../../utils/log"
   },
   "dependencies": {

@@ -41,10 +41,7 @@ function registerCommand() {
     .option('-d, --debug', '是否开启调试模式', false)
     .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件', '')
 
-  program
-    .command('init [projectNmae]')
-    .option('-f, --force', '是否强制初始化项目')
-    .action(exec) // 动态init
+  program.command('init [projectNmae]').option('-f, --force', '是否强制初始化项目').action(exec) // 动态init
 
   // 开启debug模式
   // program.on 会在执行业务逻辑之前执行
