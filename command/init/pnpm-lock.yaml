@@ -3,20 +3,28 @@ lockfileVersion: 5.3
 specifiers:
   '@tut-cli-dev/command': file:../../models/command
   '@tut-cli-dev/log': file:../../utils/log
+  '@tut-cli-dev/package': file:../../models/Package
   '@tut-cli-dev/request': file:../../utils/request
+  '@tut-cli-dev/utils': file:../../utils/utils
+  cli-spinner: ^0.2.10
   fs-extra: ^7.0.0
   inquirer: ^7.0.0
   semver: ^7.0.0
+  user-home: ^2.0.0
 
 dependencies:
+  cli-spinner: 0.2.10
   fs-extra: 7.0.1
   inquirer: 7.3.3
   semver: 7.3.7
+  user-home: 2.0.0
 
 devDependencies:
   '@tut-cli-dev/command': link:../../models/command
   '@tut-cli-dev/log': link:../../utils/log
+  '@tut-cli-dev/package': link:../../models/Package
   '@tut-cli-dev/request': link:../../utils/request
+  '@tut-cli-dev/utils': link:../../utils/utils
 
 packages:
 
@@ -56,6 +64,11 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       restore-cursor: 3.1.0
+    dev: false
+
+  /cli-spinner/0.2.10:
+    resolution: {integrity: sha512-U0sSQ+JJvSLi1pAYuJykwiA8Dsr15uHEy85iCJ6A+0DjVxivr3d+N2Wjvodeg89uP5K6TswFkKBfAD7B3YSn/Q==}
+    engines: {node: '>=0.10'}
     dev: false
 
   /cli-width/3.0.0:
@@ -181,6 +194,11 @@ packages:
       mimic-fn: 2.1.0
     dev: false
 
+  /os-homedir/1.0.2:
+    resolution: {integrity: sha512-B5JU3cabzk8c67mRRd3ECmROafjYMXbuzlwtqdM8IbS8ktlTix8aFGb2bAGKrSRIlnfKwovGUUr72JUPyOb6kQ==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /os-tmpdir/1.0.2:
     resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
     engines: {node: '>=0.10.0'}
@@ -268,6 +286,13 @@ packages:
   /universalify/0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
     engines: {node: '>= 4.0.0'}
+    dev: false
+
+  /user-home/2.0.0:
+    resolution: {integrity: sha512-KMWqdlOcjCYdtIJpicDSFBQ8nFwS2i9sslAd6f4+CBGcU4gist2REnr2fxj2YocvJFxSF3ZOHLYLVZnUxv4BZQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      os-homedir: 1.0.2
     dev: false
 
   /yallist/4.0.0:

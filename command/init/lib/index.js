@@ -1,16 +1,22 @@
 // 'use strict'
 const inquirer = require('inquirer')
 const semver = require('semver')
+const userHome = require('user-home')
+
 const Command = require('@tut-cli-dev/command')
+const Package = require('@tut-cli-dev/package')
 const log = require('@tut-cli-dev/log')
+const { spinnerStart, sleep } = require('@tut-cli-dev/utils')
+
 const fs = require('fs')
 const fse = require('fs-extra')
+const path = require('path')
 const getProjectTemplate = require('./getProjectTemplate')
 
 const TYPE_PROJECT = 'project'
 const TYPE_COMPONENT = 'component'
 
-log.level = process.env.LOG_LEVEL
+// log.level = process.env.LOG_LEVEL
 
 class InitCommand extends Command {
   init() {
@@ -28,19 +34,54 @@ class InitCommand extends Command {
         log.verbose('projectInfo', projectInfo)
         this.projectInfo = projectInfo
         // 2. 下载模板
-        this.downloadTemplate()
+        await this.downloadTemplate()
         // 3. 安装模板
       }
     } catch (e) {
       log.error(e.message)
     }
   }
-  downloadTemplate() {
+  async downloadTemplate() {
     // 1. 通过项目模板API获取项目模板信息
     // 1.1 通过egg.js搭建一套后端系统
     // 1.2 通过npm存储项目模板(vue-cli/vue-element-admin)
     // 1.3 将项目模板信息存储到mongodb数据库中
     // 1.4 通过egg.js获取mongodb中的数据并返回
+    const { projectTemplate } = this.projectInfo
+    const templateInfo = this.template.find((item) => item.npmName === projectTemplate)
+    const targetPath = path.resolve(userHome, '.tut-cli-dev', 'template')
+    const storeDir = path.resolve(userHome, '.tut-cli-dev', 'template', 'node_modules')
+    const { npmName, version } = templateInfo
+    const templateNpm = new Package({
+      targetPath,
+      storeDir,
+      packageName: npmName,
+      packageVersion: version
+    })
+    const hasTemplate = await templateNpm.exists()
+    if (!hasTemplate) {
+      const spinner = spinnerStart('正在下载模版...')
+      await sleep()
+      try {
+        await templateNpm.install()
+        log.success('模版下载成功!')
+      } catch (e) {
+        throw e
+      } finally {
+        spinner.stop(true)
+      }
+    } else {
+      const spinner = spinnerStart('正在更新模版...')
+      try {
+        await sleep()
+        await templateNpm.update()
+        log.success('模版更新成功!')
+      } catch (e) {
+        throw e
+      } finally {
+        spinner.stop(true)
+      }
+    }
   }
   async prepare() {
     // 0. 判断项目模板是否存在
@@ -111,7 +152,6 @@ class InitCommand extends Command {
 
             // tip
             const done = this.async()
-
             setTimeout(() => {
               if (
                 !/^[a-zA-Z]+(-[a-zA-Z][a-zA-Z0-9]*|_[a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v)
@@ -129,7 +169,6 @@ class InitCommand extends Command {
           message: '请输入项目版本号',
           validate: function (v) {
             const done = this.async()
-
             setTimeout(() => {
               if (!semver.valid(v)) {
                 done('请输入合法的版本号')

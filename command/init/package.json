@@ -28,12 +28,16 @@
   },
   "devDependencies": {
     "@tut-cli-dev/command": "file:../../models/command",
-    "@tut-cli-dev/request": "file:../../utils/request",
-    "@tut-cli-dev/log": "file:../../utils/log"
+    "@tut-cli-dev/log": "file:../../utils/log",
+    "@tut-cli-dev/package": "file:../../models/Package",
+    "@tut-cli-dev/utils": "file:../../utils/utils",
+    "@tut-cli-dev/request": "file:../../utils/request"
   },
   "dependencies": {
+    "cli-spinner": "^0.2.10",
     "fs-extra": "^7.0.0",
     "inquirer": "^7.0.0",
-    "semver": "^7.0.0"
+    "semver": "^7.0.0",
+    "user-home": "^2.0.0"
   }
 }

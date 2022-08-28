@@ -7,10 +7,7 @@ const fsExtra = require('fs-extra')
 
 const { isObject } = require('@tut-cli-dev/utils')
 const formatPath = require('@tut-cli-dev/format-path')
-const {
-  getDefaultRegistry,
-  getNpmLastestVersion
-} = require('@tut-cli-dev/get-npm-info')
+const { getDefaultRegistry, getNpmLastestVersion } = require('@tut-cli-dev/get-npm-info')
 
 class Package {
   constructor(options) {
@@ -29,7 +26,8 @@ class Package {
     this.cacheFilePathPrefix = this.packageName.replace(/\//g, '_')
   }
   async prepare() {
-    if ((this, this.storeDir && !pathExists(this.storeDir))) {
+    // 确保目录存在
+    if (this.storeDir && !pathExists(this.storeDir)) {
       fsExtra.mkdirpSync(this.storeDir)
     }
     if (this.packageVersion === 'lastest') {
@@ -39,13 +37,13 @@ class Package {
   get cacheFilePath() {
     return path.resolve(
       this.storeDir,
-      `_${this.cacheFilePath}@${this.packageVersion}@${this.packageName}`
+      `_${this.cacheFilePathPrefix}@${this.packageVersion}@${this.packageName}`
     )
   }
   getSpecificCacheFilePath(packageVersion) {
     return path.resolve(
       this.storeDir,
-      `_${this.cacheFilePath}@${packageVersion}@${this.packageName}`
+      `_${this.cacheFilePathPrefix}@${packageVersion}@${this.packageName}`
     )
   }
   // 判断package是否存在
