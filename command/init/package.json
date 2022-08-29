@@ -30,13 +30,16 @@
     "@tut-cli-dev/command": "file:../../models/command",
     "@tut-cli-dev/log": "file:../../utils/log",
     "@tut-cli-dev/package": "file:../../models/Package",
-    "@tut-cli-dev/utils": "file:../../utils/utils",
-    "@tut-cli-dev/request": "file:../../utils/request"
+    "@tut-cli-dev/request": "file:../../utils/request",
+    "@tut-cli-dev/utils": "file:../../utils/utils"
   },
   "dependencies": {
     "cli-spinner": "^0.2.10",
+    "ejs": "^3.1.8",
     "fs-extra": "^7.0.0",
+    "glob": "^7.0.3",
     "inquirer": "^7.0.0",
+    "kebab-case": "^1.0.1",
     "semver": "^7.0.0",
     "user-home": "^2.0.0"
   }

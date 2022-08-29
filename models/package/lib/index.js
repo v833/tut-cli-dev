@@ -79,6 +79,8 @@ class Package {
         pkgs: [{ name: this.packageName, version: lastestFilePath }]
       })
       this.packageVersion = latestPackageVersion
+    } else {
+      this.packageVersion = latestPackageVersion
     }
   }
   getRootFilePath() {

@@ -2,6 +2,8 @@
 const inquirer = require('inquirer')
 const semver = require('semver')
 const userHome = require('user-home')
+const ejs = require('ejs')
+const glob = require('glob')
 
 const Command = require('@tut-cli-dev/command')
 const Package = require('@tut-cli-dev/package')
@@ -44,6 +46,9 @@ class InitCommand extends Command {
       }
     } catch (e) {
       log.error(e.message)
+      if (process.env.LOG_LEVEL === 'verbose') {
+        console.log(e)
+      }
     }
   }
   async installTemplate() {
@@ -87,6 +92,42 @@ class InitCommand extends Command {
       throw new Error(errMsg)
     }
   }
+  async ejsRender(options) {
+    const dir = process.cwd()
+    const projectInfo = this.projectInfo
+    return new Promise((resolve, reject) => {
+      glob(
+        '**',
+        {
+          cwd: dir,
+          ignore: options.ignore || '',
+          nodir: true
+        },
+        (err, files) => {
+          if (err) {
+            reject(err)
+          }
+          Promise.all(
+            files.map((file) => {
+              const filePath = path.join(dir, file)
+              return new Promise((resolve1, reject1) => {
+                ejs.renderFile(filePath, projectInfo, {}, (err, result) => {
+                  if (err) {
+                    reject1(err)
+                  }
+                  // 没有写入,返回字符串
+                  fse.writeFileSync(filePath, result)
+                  resolve1(result)
+                })
+              })
+            })
+          )
+            .then(() => resolve())
+            .catch((err) => reject(err))
+        }
+      )
+    })
+  }
   async installNormalTemplate() {
     log.verbose('templateNpm', this.templateNpm)
     // 拷贝模版代码至当前目录
@@ -104,6 +145,8 @@ class InitCommand extends Command {
       spinner.stop(true)
       log.success('模版安装成功!')
     }
+    const ignore = ['node_modules/**', 'public/**']
+    await this.ejsRender({ ignore })
     const { installCommand, startCommand } = this.templateInfo
     // 依赖安装
     await this.execCommand(installCommand, '依赖安装过程中失败!')
@@ -275,7 +318,14 @@ class InitCommand extends Command {
       }
     } else if (type === TYPE_COMPONENT) {
     }
-
+    // AbcEfg => abc-efg 生成className
+    if (projectInfo.projectName) {
+      projectInfo.name = projectInfo.projectName
+      projectInfo.className = require('kebab-case')(projectInfo.projectName).replace(/^-/, '')
+    }
+    if (projectInfo.projectVersion) {
+      projectInfo.version = projectInfo.projectVersion
+    }
     return projectInfo
   }
   isDirEmpty(localPath) {
