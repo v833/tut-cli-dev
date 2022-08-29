@@ -15,6 +15,8 @@ const getProjectTemplate = require('./getProjectTemplate')
 
 const TYPE_PROJECT = 'project'
 const TYPE_COMPONENT = 'component'
+const TEMPLATE_TYPE_NORMAL = 'normal'
+const TEMPLATE_TYPE_CUSTOM = 'custom'
 
 // log.level = process.env.LOG_LEVEL
 
@@ -36,11 +38,46 @@ class InitCommand extends Command {
         // 2. 下载模板
         await this.downloadTemplate()
         // 3. 安装模板
+        this.installTemplate()
       }
     } catch (e) {
       log.error(e.message)
     }
   }
+  async installTemplate() {
+    if (this.templateInfo) {
+      if (!this.templateInfo.type) this.templateInfo.type = TEMPLATE_TYPE_NORMAL
+      if (this.templateInfo.type === TEMPLATE_TYPE_NORMAL) {
+        // 标准安装
+        await this.installNormalTemplate()
+      } else if (this.templateInfo.type === TEMPLATE_TYPE_CUSTOM) {
+        // 自定义安装
+        await this.installCustomTemplate()
+      } else {
+        throw new Error('无法识别项目模版!')
+      }
+    } else {
+      throw new Error('项目模版信息不存在!')
+    }
+  }
+  async installNormalTemplate() {
+    // 拷贝模版代码至当前目录
+    const spinner = spinnerStart('正在安装模版...')
+    await sleep()
+    try {
+      const templatePath = path.resolve(this.templateNpm.cacheFilePath, 'template')
+      const targetPath = process.cwd()
+      fse.ensureDirSync(templatePath)
+      fse.ensureDirSync(targetPath)
+      fse.copySync(templatePath, targetPath)
+    } catch (e) {
+      throw e
+    } finally {
+      spinner.stop(true)
+      log.success('模版安装成功!')
+    }
+  }
+  async installCustomTemplate() {}
   async downloadTemplate() {
     // 1. 通过项目模板API获取项目模板信息
     // 1.1 通过egg.js搭建一套后端系统
@@ -52,6 +89,7 @@ class InitCommand extends Command {
     const targetPath = path.resolve(userHome, '.tut-cli-dev', 'template')
     const storeDir = path.resolve(userHome, '.tut-cli-dev', 'template', 'node_modules')
     const { npmName, version } = templateInfo
+    this.templateInfo = templateInfo
     const templateNpm = new Package({
       targetPath,
       storeDir,
@@ -64,22 +102,28 @@ class InitCommand extends Command {
       await sleep()
       try {
         await templateNpm.install()
-        log.success('模版下载成功!')
       } catch (e) {
         throw e
       } finally {
         spinner.stop(true)
+        if (templateNpm.exists()) {
+          log.success('模版下载成功!')
+          this.templateNpm = templateNpm
+        }
       }
     } else {
       const spinner = spinnerStart('正在更新模版...')
       try {
         await sleep()
         await templateNpm.update()
-        log.success('模版更新成功!')
       } catch (e) {
         throw e
       } finally {
         spinner.stop(true)
+        if (templateNpm.exists()) {
+          log.success('模版更新成功!')
+          this.templateNpm = templateNpm
+        }
       }
     }
   }
