@@ -245,7 +245,15 @@ class InitCommand extends Command {
     return await this.getProjectInfo()
   }
   async getProjectInfo() {
+    function isValidName(name) {
+      return /^[a-zA-Z]+(-[a-zA-Z][a-zA-Z0-9]*|_[a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(name)
+    }
     let projectInfo = {}
+    let isProjectNameValid = false
+    if (isValidName(this.projectName)) {
+      isProjectNameValid = true
+      projectInfo.projectName = this.projectName
+    }
     // 3. 选择创建项目或组件
     const { type } = await inquirer.prompt({
       type: 'list',
@@ -260,29 +268,27 @@ class InitCommand extends Command {
     log.verbose('type', type)
     if (type === TYPE_PROJECT) {
       // 4. 获取项目的基本信息
-      const project = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'projectName',
-          message: '请输入项目名称',
-          validate: function (v) {
-            // 1. 输入的首字符必须为英文字符
-            // 2. 尾字符必须为英文或数字, 不能为字符
-            // 3. 字符仅仅允许'-_'
+      const projectNamePrompt = {
+        type: 'input',
+        name: 'projectName',
+        message: '请输入项目名称',
+        validate: function (v) {
+          // 1. 输入的首字符必须为英文字符
+          // 2. 尾字符必须为英文或数字, 不能为字符
+          // 3. 字符仅仅允许'-_'
 
-            // tip
-            const done = this.async()
-            setTimeout(() => {
-              if (
-                !/^[a-zA-Z]+(-[a-zA-Z][a-zA-Z0-9]*|_[a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v)
-              ) {
-                done('请输入合法的项目名称')
-                return
-              }
-              done(null, true)
-            }, 0)
-          }
-        },
+          // tip
+          const done = this.async()
+          setTimeout(() => {
+            if (!isValidName(v)) {
+              done('请输入合法的项目名称')
+              return
+            }
+            done(null, true)
+          }, 0)
+        }
+      }
+      const projectPrompt = [
         {
           type: 'input',
           name: 'projectVersion',
@@ -311,8 +317,14 @@ class InitCommand extends Command {
           message: '请选择项目模板',
           choices: this.createTemplateChoices()
         }
-      ])
+      ]
+      if (!isProjectNameValid) {
+        projectPrompt.unshift(projectNamePrompt)
+      }
+
+      const project = await inquirer.prompt(projectPrompt)
       projectInfo = {
+        ...projectInfo,
         type,
         ...project
       }
