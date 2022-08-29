@@ -4,12 +4,11 @@ const path = require('path')
 
 const Package = require('@tut-cli-dev/package')
 const log = require('@tut-cli-dev/log')
-const cp = require('child_process')
+const { exec: spawn } = require('@tut-cli-dev/utils')
 
 const SETTINGS = {
   init: '@tut-cli-dev/init'
 }
-
 
 const CACHE_DIR = 'dependencies'
 
@@ -67,11 +66,7 @@ async function exec() {
       const cmd = args.at(-1)
       const o = Object.create(null)
       Object.keys(cmd).forEach((key) => {
-        if (
-          cmd.hasOwnProperty(key) &&
-          !key.startsWith('_') &&
-          key !== 'parent'
-        ) {
+        if (cmd.hasOwnProperty(key) && !key.startsWith('_') && key !== 'parent') {
           o[key] = cmd[key]
         }
       })
@@ -100,13 +95,6 @@ async function exec() {
     }
     // 在node子进程中进行
   }
-}
-
-function spawn(command, args, options) {
-  const win32 = process.platform === 'win32'
-  const cmd = win32 ? 'cmd' : command
-  const cmdArgs = win32 ? ['/c'].concat(command, args) : args
-  return cp.spawn(cmd, cmdArgs, options || {})
 }
 
 module.exports = exec

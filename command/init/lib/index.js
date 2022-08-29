@@ -6,7 +6,7 @@ const userHome = require('user-home')
 const Command = require('@tut-cli-dev/command')
 const Package = require('@tut-cli-dev/package')
 const log = require('@tut-cli-dev/log')
-const { spinnerStart, sleep } = require('@tut-cli-dev/utils')
+const { spinnerStart, sleep, execAsync } = require('@tut-cli-dev/utils')
 
 const fs = require('fs')
 const fse = require('fs-extra')
@@ -15,9 +15,11 @@ const getProjectTemplate = require('./getProjectTemplate')
 
 const TYPE_PROJECT = 'project'
 const TYPE_COMPONENT = 'component'
+
 const TEMPLATE_TYPE_NORMAL = 'normal'
 const TEMPLATE_TYPE_CUSTOM = 'custom'
 
+const WHITE_COMMAND = ['npm', 'cnpm', 'yarn', 'pnpm']
 // log.level = process.env.LOG_LEVEL
 
 class InitCommand extends Command {
@@ -60,7 +62,33 @@ class InitCommand extends Command {
       throw new Error('项目模版信息不存在!')
     }
   }
+  checkCommand(cmd) {
+    if (WHITE_COMMAND.includes(cmd)) {
+      return cmd
+    } else {
+      return null
+    }
+  }
+  async execCommand(command, errMsg) {
+    let ret
+    const cmdArray = command?.split(' ')
+    if (cmdArray && cmdArray.length > 0) {
+      const cmd = this.checkCommand(cmdArray[0])
+      if (!cmd) {
+        throw new Error('命令不存在! 命令: ' + command)
+      }
+      const args = cmdArray.slice(1)
+      ret = await execAsync(cmd, args, {
+        stdio: 'inherit',
+        cwd: process.cwd()
+      })
+    }
+    if (ret !== 0) {
+      throw new Error(errMsg)
+    }
+  }
   async installNormalTemplate() {
+    log.verbose('templateNpm', this.templateNpm)
     // 拷贝模版代码至当前目录
     const spinner = spinnerStart('正在安装模版...')
     await sleep()
@@ -76,6 +104,11 @@ class InitCommand extends Command {
       spinner.stop(true)
       log.success('模版安装成功!')
     }
+    const { installCommand, startCommand } = this.templateInfo
+    // 依赖安装
+    await this.execCommand(installCommand, '依赖安装过程中失败!')
+    // 启动命令执行
+    await this.execCommand(startCommand, '命令执行过程中失败!')
   }
   async installCustomTemplate() {}
   async downloadTemplate() {
